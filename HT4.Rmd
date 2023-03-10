@@ -6,62 +6,20 @@ output: html_document
 ---
 
 ```{r, echo=FALSE}
-library("dplyr")
+library(dplyr)
+library(rpart)
+library(rpart.plot)
+library(caret)
+library(tree)
+library(randomForest)
+
 
 datos <- read.csv("train.csv")
-str(datos)
-summary(datos)
-
 ```
-##P2 y P3. Analisis Exploratorio
-
-Las variables siguientes son cuantitativas y discretas, por lo tanto serán tomadas en cuenta en el análisis y modelado:
-
-->MSSubClass
-->LotFrontage
-->LotArea
-->OverallQual
-->OverallCond
-->YearBuilt
-->YearRemodAdd
-->MasVnrArea
-->BsmtFinSF1
-->BsmtFinSF2
-->BsmtUnfSF
-->TotalBsmtSF
-->X1stFlrSF
-->X2ndFlrSF
-->LowQualFinSF
-->GrLivArea
-->BsmtFullBath
-->BsmtHalfBath
-->FullBath
-->HalfBath
-->BedroomAbvGr
-->KitchenAbvGr
-->TotRmsAbvGrd
-->Fireplaces
-->GarageYrBlt
-->GarageCars
-->GarageArea
-->WoodDeckSF
-->OpenPorchSF
-->EnclosedPorch
-->X3SsnPorch
-->ScreenPorch
-->PoolArea
-->MiscVal
-->MoSold
-->YrSold
-->SaleCondition
-->SalePrice
-
-No existen variables cuantitativas continuas.
-
-En cuánto al análsis se puede notar en el archivo adjunto con los histogramas de las variables que ninguna variable parece respetar una distribución normal.
 
 ```{r, echo = FALSE}
 datos2 <- dplyr::select_if(datos, is.numeric)
+datos2 <- na.omit(datos2)
 datosc <- scale(datos2)
 cor(datosc)
 ```
@@ -87,3 +45,27 @@ head(training)
 ```{r}
 head(test)
 ```
+
+##Pregunta 2. Arbol de regresión con todas las variables
+```{r}
+arbol1 <- rpart(SalePrice ~ ., data=datos2)
+rpart.plot(arbol1)
+```
+
+##Pregunta 4. Arbol de regresión con todas las variables
+```{r}
+modelo1 <- rpart(SalePrice ~ ., data=datos2, maxdepth=2)
+modelo2 <- rpart(SalePrice ~ ., data=datos2, maxdepth=3)
+modelo3 <- rpart(SalePrice ~ ., data=datos2, maxdepth=5)
+rpart.plot(modelo1)
+rpart.plot(modelo2)
+rpart.plot(modelo3)
+
+```
+
+##Pregunta 6. Economica, intermedia o cara
+```{r}
+datos2$clasification <- ifelse(datos2$SalePrice > 214000, "Caras", ifelse(datos2$SalePrice>163000, "Intemedia", "Economicas"))
+table(datos2$clasification)
+```
+

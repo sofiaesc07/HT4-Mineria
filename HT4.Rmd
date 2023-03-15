@@ -48,24 +48,97 @@ head(test)
 
 ##Pregunta 2. Arbol de regresión con todas las variables
 ```{r}
-arbol1 <- rpart(SalePrice ~ ., data=datos2)
+arbol1 <- rpart(SalePrice ~ ., data=training)
 rpart.plot(arbol1)
 ```
 
 ##Pregunta 4. Arbol de regresión con todas las variables
 ```{r}
-modelo1 <- rpart(SalePrice ~ ., data=datos2, maxdepth=2)
-modelo2 <- rpart(SalePrice ~ ., data=datos2, maxdepth=3)
-modelo3 <- rpart(SalePrice ~ ., data=datos2, maxdepth=5)
+modelo1 <- rpart(SalePrice ~ ., data=training, maxdepth=2)
+modelo2 <- rpart(SalePrice ~ ., data=training, maxdepth=3)
+modelo3 <- rpart(SalePrice ~ ., data=training, maxdepth=5)
 rpart.plot(modelo1)
 rpart.plot(modelo2)
 rpart.plot(modelo3)
 
 ```
 
-##Pregunta 6. Economica, intermedia o cara
+## Pregunta 6. Economica, intermedia o cara
 ```{r}
-datos2$clasification <- ifelse(datos2$SalePrice > 214000, "Caras", ifelse(datos2$SalePrice>163000, "Intemedia", "Economicas"))
-table(datos2$clasification)
+training$clasification <- ifelse(training$SalePrice > 214000, "Caras", ifelse(training$SalePrice>163000, "Intemedia", "Economicas"))
+table(training$clasification)
 ```
+
+## Pregunta 7. Elabore un árbol de clasificación utilizando la variable respuesta que creó en el punto
+anterior. Explique los resultados a los que llega. Muestre el modelo gráficamente. Recuerde
+que la nueva variable respuesta es categórica, pero se generó a partir de los precios de las
+casas, no incluya el precio de venta para entrenar el modelo.
+
+```{r}
+modclasificacion<-rpart(training$clasification~.,data = training,method = "class")
+#rpart.plot(modclasificacion)
+```
+
+## Pregunta 8.Utilice el modelo con el conjunto de prueba y determine la eficiencia del algoritmo para clasificar
+
+
+```{r}
+test$clasification <- ifelse(test$SalePrice > 214000, "Caras", ifelse(test$SalePrice>163000, "Intemedia", "Economicas"))
+
+clasificacion<-rpart(test$clasification~.,data = test,method = "class")
+y <- factor(test$clasification)
+rpart.plot(clasificacion)
+
+pred2<-predict(clasificacion,data = test)
+pred2 <- apply(pred2, 1, function(x) colnames(pred2)[which.max(x)])
+pred2 <- factor(pred2)
+confusionMatrix(pred2, y)
+```
+
+```{r}
+#y<-test
+#test$clasification <- ifelse(test$SalePrice > 214000, "Caras", ifelse(test$SalePrice>163000, "Intemedia", "Economicas"))
+
+y <- test[,"clasification"]
+test<-test%>%select(-c("SalePrice","clasification"))
+training<-training %>% select(-c("SalePrice"))
+#training$clasification <- ifelse(training$SalePrice > 214000, "Caras", ifelse(training$SalePrice>163000, "Intemedia", "Economicas"))
+
+#modclasificaciontest<-rpart(test$clasification~.,data = test,method = "class")
+
+
+
+pred2<-predict(modclasificacion,data = test)
+pred2 <- apply(pred2, 1, function(x) colnames(pred2)[which.max(x)])
+pred2 <- factor(pred2)
+confusionMatrix(pred2, y)
+#testnew <- test                                # Duplicate test data set
+#testnew$Utilities[which(!(testnew$Utilities %in% unique(training$Utilities)))] <- NA  # Replace new levels by NA 
+#pred2<-predict(clasificacion,newdata = testnew)
+```
+
+
+
+```{r}
+
+
+test$clasification <- ifelse(test$SalePrice > 214000, "Caras", ifelse(test$SalePrice>163000, "Intemedia", "Economicas"))
+  
+clasificacion<-rpart(training$clasification~.,data = training,method = "class")
+
+y <- factor(test$clasification)
+rpart.plot(clasificacion)
+
+pred2<-predict(clasificacion,data = test)
+pred2 <- apply(pred2, 1, function(x) colnames(pred2)[which.max(x)])
+pred2 <- factor(pred2)
+confusionMatrix(pred2, y)
+
+table(train$Survived)
+table(y)
+
+```
+
+
+
 

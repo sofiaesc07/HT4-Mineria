@@ -121,6 +121,8 @@ pred2 <- apply(pred2, 1, function(x) colnames(pred2)[which.max(x)])
 pred2 <- factor(pred2)
 ```
 
+Podemos observar en las siguientes tablas que el error que se tuvo en la predicción de casas catalogadas como caras fue de un excedente de 2, para la predicción de casas economicas fue de un exceso 11 y para las casas intermedias fue de una falta de 13 casas. Presentado como porcentajes de error, Se tuvo 1.81% de error en las casas caras, un error de 5.14% para las economicas y un error de 11.30% para las casas de clasificación intermedia. De igual manera se puede observar la similaridad en los gráficos siguientes.
+
 ### Tabla valores reales de clasificación
 ```{r}
 table(y)

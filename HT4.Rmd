@@ -67,14 +67,13 @@ head(test)
 arbol1 <- rpart(SalePrice ~ ., data=training)
 rpart.plot(arbol1)
 ```
-Para el árbol de regresión se puede observar que los resultados indican la probabilidad de que una casa tenga cierta característica según otras características que poseen. Al observar los resultados de las pruebas se puede ver que el entrenamiento de los datos fue exitoso ya que se obtuvo un valor cercano a 0 y ambos resultados son diferentes, lo cual nos indica que no hubo overfitting.
 
 ##Pregunta 3. Preddición del resultado
 ```{r}
 pred1 <- predict(arbol1, data = training1)
-p1 <- sum((mean(training1$SalePrice)-training1$SalePrice) ^ 2)
-p2 <- sum((training1$SalePrice-pred1) ^ 2)
-p3 <- 1-(p2 / p1)
+p1 <- sum((training1$SalePrice - mean(training1$SalePrice)) ^ 2)
+p2 <- sum((pred1 - training1$SalePrice) ^ 2)
+p3 <- (p2 / p1)-1
 p3
 
 ```
@@ -104,16 +103,15 @@ table(training1$clasification)
 Los limites de como clasificar fueron basados en el analisis exploratorio de los datos de la hoja pasada en donde tomas el 1er y 3er cuartil y la media de la variable SalePrice. 
 
 
-## Pregunta 7. Elabore un árbol de clasificación utilizando la variable respuesta que creó en el punto
-anterior. Explique los resultados a los que llega. Muestre el modelo gráficamente. Recuerde
-que la nueva variable respuesta es categórica, pero se generó a partir de los precios de las
-casas, no incluya el precio de venta para entrenar el modelo.
+## Pregunta 7. Elabore un árbol de clasificación utilizando la variable respuesta que creó en el punto anterior. Explique los resultados a los que llega. Muestre el modelo gráficamente. Recuerde que la nueva variable respuesta es categórica, pero se generó a partir de los precios de las casas, no incluya el precio de venta para entrenar el modelo.
 
 ```{r}
 training1<-training1[,-81]
 modclasificacion<-rpart(clasification~.,data = training1,method = "class")
 rpart.plot(modclasificacion)
 ```
+
+Como se puede observar el resultado del árbol nos muestra clasificaciones de los rangos económicos de las casas basados en las características que cada una presenta. Viendo los resultados de las pruebas también podemos decir que el resultado obtenido es satisfactorio ya que en las métricas se obtuvo un valor cercano a uno. Por otro lado, se buscó el accuracy aplicado al test y al entrenamiento, donde los valores obtenidos fueron muy similares, esto descarta por completo la posibilidad de un overfitting. Además, se obtuvo la matriz de confusión del árbol en la que se puede observar que se tuvieron pocos falsos positivos y pocos falsos negativos. Por lo tanto, se concluyó que el modelo realizado es válido para el árbol de clasificación.
 
 ## Pregunta 8.Utilice el modelo con el conjunto de prueba y determine la eficiencia del algoritmo para clasificar
 
@@ -156,7 +154,7 @@ plot(y , col="blue",density=20,angle=135)
 ## PRoblema 9. Haga un análisis de la eficiencia del algoritmo usando una matriz de confusión para el árbol de clasificación. Tenga en cuenta la efectividad, donde el algoritmo se equivocó más, donde se equivocó menos y la importancia que tienen los errores.
 
 A partir de los datos obtenidos con la matriz de confusión tenemos una precision de 80.41% en los datos, de los cuales la tabla nos indica que se equivocó en 33 predicciones para la clasificacion de casas intermedias, se equivocó en 28 predicciones para la clasificación de casas económicas y se equivocó en 25 predicciones para la clasificación de casas caras. Podemos notar que el algoritmo se equivocó más en la prediccion de clasificación intermedia, y se equivocó menos en la clasificación de casas caras. 
-
+Nuestro modelo es 80% efectivo sobre los datos, los errores que se tienen pueden ser respecto a los datos que estaban más cerca de los limites de separación para la clasificación.
 
 ```{r}
 confusionMatrix(y, pred2)

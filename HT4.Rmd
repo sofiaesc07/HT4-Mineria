@@ -24,6 +24,8 @@ set.seed(123)
 corte <- sample(nrow(datos),nrow(datos)*porcentaje)
 training1<-datos[corte,]
 test1<-datos[-corte,]
+
+
 ```
 
 ```{r, echo = FALSE}
@@ -66,6 +68,9 @@ rpart.plot(arbol1)
 ```
 
 ##Pregunta 3. Preddición del resultado
+```{r}
+
+```
 
 Predijo el resultado con un error del 2% lo cuál no es malo pero puede mejorar, y lo hizo con una longitud de 4 por lo que debería de intentar con mayor longitud para ver si la prección mejora y cambia. 
 
@@ -86,7 +91,7 @@ Observamos como el arbol con longitud 6 es de 4 por lo que se indica que es la l
 ## Pregunta 6. Economica, intermedia o cara
 ```{r}
 training1$clasification <- ifelse(training1$SalePrice > 214000, "Caras", ifelse(training1$SalePrice>163000, "Intemedia", "Economicas"))
-table(training$clasification)
+table(training1$clasification)
 ```
 Los limites de como clasificar fueron basados en el analisis exploratorio de los datos de la hoja pasada en donde tomas el 1er y 3er cuartil y la media de la variable SalePrice. 
 

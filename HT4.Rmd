@@ -52,22 +52,31 @@ arbol1 <- rpart(SalePrice ~ ., data=training)
 rpart.plot(arbol1)
 ```
 
+##Pregunta 3. Preddición del resultado
+
+Predijo el resultado con un error del 2% lo cuál no es malo pero puede mejorar, y lo hizo con una longitud de 4 por lo que debería de intentar con mayor longitud para ver si la prección mejora y cambia. 
+
 ##Pregunta 4. Arbol de regresión con todas las variables
 ```{r}
 modelo1 <- rpart(SalePrice ~ ., data=training, maxdepth=2)
 modelo2 <- rpart(SalePrice ~ ., data=training, maxdepth=3)
-modelo3 <- rpart(SalePrice ~ ., data=training, maxdepth=5)
+modelo3 <- rpart(SalePrice ~ ., data=training, maxdepth=4)
 rpart.plot(modelo1)
 rpart.plot(modelo2)
 rpart.plot(modelo3)
 
 ```
 
+##Pregunta 5. Compare resultados
+Observamos como el arbol con longitud 6 es de 4 por lo que se indica que es la longitud maxima y por lo tanto la máxima predicción y minimo error es del 2%, esta de igual forma es mejor que la de longitud 2 con 5% y la de longitud 3 que aunque sea en menor porcentaje 2% en las otras predicciones de igual forma tiene mayores porcentajes que la de longitud 6.
+
 ## Pregunta 6. Economica, intermedia o cara
 ```{r}
 training$clasification <- ifelse(training$SalePrice > 214000, "Caras", ifelse(training$SalePrice>163000, "Intemedia", "Economicas"))
 table(training$clasification)
 ```
+Los limites de como clasificar fueron basados en el analisis exploratorio de los datos de la hoja pasada en donde tomas el 1er y 3er cuartil y la media de la variable SalePrice. 
+
 
 ## Pregunta 7. Elabore un árbol de clasificación utilizando la variable respuesta que creó en el punto
 anterior. Explique los resultados a los que llega. Muestre el modelo gráficamente. Recuerde
@@ -76,7 +85,7 @@ casas, no incluya el precio de venta para entrenar el modelo.
 
 ```{r}
 modclasificacion<-rpart(training$clasification~.,data = training,method = "class")
-#rpart.plot(modclasificacion)
+rpart.plot(modclasificacion)
 ```
 
 ## Pregunta 8.Utilice el modelo con el conjunto de prueba y determine la eficiencia del algoritmo para clasificar

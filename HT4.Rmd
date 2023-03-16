@@ -137,14 +137,25 @@ table(y)
 ### Tabla valores predecidos de clasificación 
 ```{r}
 table(pred2)
+```
+
+Grafico de datos de predicción
+
+```{r}
 plot(pred2, col="green",density=20,angle=135+geom_text(aes(label = signif(pred2)), nudge_y = 0))
+```
+
+Gráfico de valores reales
+
+```{r}
 plot(y , col="blue",density=20,angle=135)
 
 ```
 
-## PRoblema 9. Haga un análisis de la eficiencia del algoritmo usando una matriz de confusión para el árbol
-de clasificación. Tenga en cuenta la efectividad, donde el algoritmo se equivocó más, donde
-se equivocó menos y la importancia que tienen los errores.
+## PRoblema 9. Haga un análisis de la eficiencia del algoritmo usando una matriz de confusión para el árbol de clasificación. Tenga en cuenta la efectividad, donde el algoritmo se equivocó más, donde se equivocó menos y la importancia que tienen los errores.
+
+A partir de los datos obtenidos con la matriz de confusión tenemos una precision de 80.41% en los datos, de los cuales la tabla nos indica que se equivocó en 33 predicciones para la clasificacion de casas intermedias, se equivocó en 28 predicciones para la clasificación de casas económicas y se equivocó en 25 predicciones para la clasificación de casas caras. Podemos notar que el algoritmo se equivocó más en la prediccion de clasificación intermedia, y se equivocó menos en la clasificación de casas caras. 
+
 
 ```{r}
 confusionMatrix(y, pred2)

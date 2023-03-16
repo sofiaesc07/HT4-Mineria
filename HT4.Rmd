@@ -35,7 +35,6 @@ datosc <- scale(datos2)
 cor(datosc)
 corte <- sample(nrow(datos),nrow(datos)*porcentaje)
 training<-datos[corte,]
-training2<-datos2[corte,]
 test<-datos[-corte,]
 ```
 
@@ -71,10 +70,11 @@ rpart.plot(arbol1)
 ##Pregunta 3. Preddición del resultado
 ```{r}
 pred1 <- predict(arbol1, data = training1)
-p1 <- sum((pred1 - training1$SalePrice) ^ 2)
-p2 <- sum((training1$SalePrice - mean(training1$SalePrice)) ^ 2)
-p3 <- (p1 / p2)-1
+p1 <- sum((training1$SalePrice - mean(training1$SalePrice)) ^ 2)
+p2 <- sum((pred1 - training1$SalePrice) ^ 2)
+p3 <- (p2 / p1)-1
 p3
+
 ```
 
 Predijo el resultado con un error del 2% lo cuál no es malo pero puede mejorar, y lo hizo con una longitud de 4 por lo que debería de intentar con mayor longitud para ver si la prección mejora y cambia. Basandonos en el R^2 observamos que es bastante aceptable ya que es es bastante cercano a 1 por lo que se deduce que es un modelo de predicción bastante bueno.

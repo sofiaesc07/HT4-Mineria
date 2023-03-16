@@ -23,7 +23,8 @@ set.seed(123)
 corte <- sample(nrow(datos),nrow(datos)*porcentaje)
 training1<-datos[corte,]
 test1<-datos[-corte,]
-datos <- datos %>% mutate_at(c('SaleCondition','SaleType','MiscFeature','Fence','PoolQC','PavedDrive','GarageCond','GarageQual','GarageFinish','FireplaceQu','Functional','KitchenQual','Electrical','CentralAir','HeatingQC','Heating','BsmtFinType2','BsmtFinType1','BsmtExposure','BsmtCond','BsmtQual','Foundation','ExterCond','LotShape','LandContour','Utilities','LotConfig','Neighborhood','Condition1','Condition2'), as.factor)
+
+
 ```
 
 ```{r, echo = FALSE}
@@ -32,8 +33,8 @@ datos2 <- na.omit(datos2)
 datosc <- scale(datos2)
 cor(datosc)
 corte <- sample(nrow(datos),nrow(datos)*porcentaje)
-training<-datos2[corte,]
-test<-datos2[-corte,]
+training<-datos[corte,]
+test<-datos[-corte,]
 ```
 
 
@@ -88,8 +89,8 @@ Observamos como el arbol con longitud 6 es de 4 por lo que se indica que es la l
 
 ## Pregunta 6. Economica, intermedia o cara
 ```{r}
-training$clasification <- ifelse(training$SalePrice > 214000, "Caras", ifelse(training$SalePrice>163000, "Intemedia", "Economicas"))
-table(training$clasification)
+training1$clasification <- ifelse(training1$SalePrice > 214000, "Caras", ifelse(training1$SalePrice>163000, "Intemedia", "Economicas"))
+table(training1$clasification)
 ```
 Los limites de como clasificar fueron basados en el analisis exploratorio de los datos de la hoja pasada en donde tomas el 1er y 3er cuartil y la media de la variable SalePrice. 
 
@@ -100,7 +101,7 @@ que la nueva variable respuesta es categórica, pero se generó a partir de los 
 casas, no incluya el precio de venta para entrenar el modelo.
 
 ```{r}
-training<-training[,-81]
+training1<-training1[,-81]
 modclasificacion<-rpart(clasification~.,data = training1,method = "class")
 rpart.plot(modclasificacion)
 ```

@@ -12,7 +12,8 @@ library(rpart.plot)
 library(caret)
 library(tree)
 library(randomForest)
-
+library(ggplot2)
+library(tidyr)
 
 datos <- read.csv("train.csv")
 
@@ -104,7 +105,7 @@ casas, no incluya el precio de venta para entrenar el modelo.
 ```{r}
 training1<-training1[,-81]
 modclasificacion<-rpart(clasification~.,data = training1,method = "class")
-#rpart.plot(modclasificacion)
+rpart.plot(modclasificacion)
 ```
 
 ## Pregunta 8.Utilice el modelo con el conjunto de prueba y determine la eficiencia del algoritmo para clasificar
@@ -118,10 +119,19 @@ y <- as.factor(y)
 pred2<-predict(modclasificacion, newdata = test1[,-81])
 pred2 <- apply(pred2, 1, function(x) colnames(pred2)[which.max(x)])
 pred2 <- factor(pred2)
+```
 
-confusionMatrix(y, pred2)
+### Tabla valores reales de clasificación
+```{r}
+table(y)
+```
 
-length(test1$clasification)
+### Tabla valores predecidos de clasificación 
+```{r}
+table(pred2)
+plot(pred2, col="green",density=20,angle=135+geom_text(aes(label = signif(pred2)), nudge_y = 0))
+plot(y , col="blue",density=20,angle=135)
+
 ```
 
 ## PRoblema 9. Haga un análisis de la eficiencia del algoritmo usando una matriz de confusión para el árbol
@@ -129,56 +139,10 @@ de clasificación. Tenga en cuenta la efectividad, donde el algoritmo se equivoc
 se equivocó menos y la importancia que tienen los errores.
 
 ```{r}
-nrow(training)
-nrow(test)
-confusionMatrix(pred2, y)
+confusionMatrix(y, pred2)
 ```
 
 
-
-```{r}
-#y<-test
-#test$clasification <- ifelse(test$SalePrice > 214000, "Caras", ifelse(test$SalePrice>163000, "Intemedia", "Economicas"))
-
-y <- test[,"clasification"]
-test<-test%>%select(-c("SalePrice","clasification"))
-training<-training %>% select(-c("SalePrice"))
-#training$clasification <- ifelse(training$SalePrice > 214000, "Caras", ifelse(training$SalePrice>163000, "Intemedia", "Economicas"))
-
-#modclasificaciontest<-rpart(test$clasification~.,data = test,method = "class")
-
-
-
-pred2<-predict(modclasificacion,data = test)
-pred2 <- apply(pred2, 1, function(x) colnames(pred2)[which.max(x)])
-pred2 <- factor(pred2)
-confusionMatrix(pred2, y)
-#testnew <- test                                # Duplicate test data set
-#testnew$Utilities[which(!(testnew$Utilities %in% unique(training$Utilities)))] <- NA  # Replace new levels by NA 
-#pred2<-predict(clasificacion,newdata = testnew)
-```
-
-
-
-```{r}
-
-
-test$clasification <- ifelse(test$SalePrice > 214000, "Caras", ifelse(test$SalePrice>163000, "Intemedia", "Economicas"))
-  
-clasificacion<-rpart(training$clasification~.,data = training,method = "class")
-
-y <- factor(test$clasification)
-rpart.plot(clasificacion)
-
-pred2<-predict(clasificacion,data = test)
-pred2 <- apply(pred2, 1, function(x) colnames(pred2)[which.max(x)])
-pred2 <- factor(pred2)
-confusionMatrix(pred2, y)
-
-table(train$Survived)
-table(y)
-
-```
 ## Pregunta 10 Entrene un modelo usando validación cruzada, prediga con él. ¿le fue mejor que al modelo anterior?
 
 ```{r, echo = FALSE}

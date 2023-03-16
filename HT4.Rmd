@@ -66,13 +66,14 @@ head(test)
 arbol1 <- rpart(SalePrice ~ ., data=training)
 rpart.plot(arbol1)
 ```
+Para el árbol de regresión se puede observar que los resultados indican la probabilidad de que una casa tenga cierta característica según otras características que poseen. Al observar los resultados de las pruebas se puede ver que el entrenamiento de los datos fue exitoso ya que se obtuvo un valor cercano a 0 y ambos resultados son diferentes, lo cual nos indica que no hubo overfitting.
 
 ##Pregunta 3. Preddición del resultado
 ```{r}
 pred1 <- predict(arbol1, data = training1)
-p1 <- sum((training1$SalePrice - mean(training1$SalePrice)) ^ 2)
-p2 <- sum((pred1 - training1$SalePrice) ^ 2)
-p3 <- (p2 / p1)-1
+p1 <- sum((mean(training1$SalePrice)-training1$SalePrice) ^ 2)
+p2 <- sum((training1$SalePrice-pred1) ^ 2)
+p3 <- 1-(p2 / p1)
 p3
 
 ```

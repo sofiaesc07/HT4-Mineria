@@ -15,6 +15,14 @@ library(randomForest)
 
 
 datos <- read.csv("train.csv")
+
+
+
+porcentaje<-0.7
+set.seed(123)
+corte <- sample(nrow(datos),nrow(datos)*porcentaje)
+training1<-datos[corte,]
+test1<-datos[-corte,]
 ```
 
 ```{r, echo = FALSE}
@@ -22,6 +30,9 @@ datos2 <- dplyr::select_if(datos, is.numeric)
 datos2 <- na.omit(datos2)
 datosc <- scale(datos2)
 cor(datosc)
+corte <- sample(nrow(datos),nrow(datos)*porcentaje)
+training<-datos[corte,]
+test<-datos[-corte,]
 ```
 
 
@@ -34,6 +45,7 @@ set.seed(123)
 corte <- sample(nrow(datosc),nrow(datosc)*porcentaje)
 training<-datos[corte,]
 test<-datos[-corte,]
+
 ```
 
 ###Conjunto de entrenamiento (cantidad de muestras: r nrow(train)):  
@@ -65,7 +77,7 @@ rpart.plot(modelo3)
 
 ## Pregunta 6. Economica, intermedia o cara
 ```{r}
-training$clasification <- ifelse(training$SalePrice > 214000, "Caras", ifelse(training$SalePrice>163000, "Intemedia", "Economicas"))
+training1$clasification <- ifelse(training1$SalePrice > 214000, "Caras", ifelse(training1$SalePrice>163000, "Intemedia", "Economicas"))
 table(training$clasification)
 ```
 
@@ -75,25 +87,39 @@ que la nueva variable respuesta es categórica, pero se generó a partir de los 
 casas, no incluya el precio de venta para entrenar el modelo.
 
 ```{r}
-modclasificacion<-rpart(training$clasification~.,data = training,method = "class")
-#rpart.plot(modclasificacion)
+training1<-training1[,-81]
+modclasificacion<-rpart(clasification~.,data = training1,method = "class")
+rpart.plot(modclasificacion)
 ```
 
 ## Pregunta 8.Utilice el modelo con el conjunto de prueba y determine la eficiencia del algoritmo para clasificar
 
 
 ```{r}
-test$clasification <- ifelse(test$SalePrice > 214000, "Caras", ifelse(test$SalePrice>163000, "Intemedia", "Economicas"))
+y <- ifelse(test1$SalePrice > 214000, "Caras", ifelse(test1$SalePrice>163000, "Intemedia", "Economicas"))
+test1 <- test1[,-81]
+y <- as.factor(y)
 
-clasificacion<-rpart(test$clasification~.,data = test,method = "class")
-y <- factor(test$clasification)
-rpart.plot(clasificacion)
-
-pred2<-predict(clasificacion,data = test)
+pred2<-predict(modclasificacion, newdata = test1[,-81])
 pred2 <- apply(pred2, 1, function(x) colnames(pred2)[which.max(x)])
 pred2 <- factor(pred2)
+
+confusionMatrix(test1[, 81], pred2)
+
+length(test1$clasification)
+```
+
+## PRoblema 9. Haga un análisis de la eficiencia del algoritmo usando una matriz de confusión para el árbol
+de clasificación. Tenga en cuenta la efectividad, donde el algoritmo se equivocó más, donde
+se equivocó menos y la importancia que tienen los errores.
+
+```{r}
+nrow(training)
+nrow(test)
 confusionMatrix(pred2, y)
 ```
+
+
 
 ```{r}
 #y<-test

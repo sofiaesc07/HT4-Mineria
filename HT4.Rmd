@@ -16,7 +16,8 @@ library(randomForest)
 
 datos <- read.csv("train.csv")
 
-
+datos <- datos %>% mutate_at(c('MSZoning', 'Street', 'Alley', 'LotShape', 'LandContour', 'Utilities'
+                               , 'LotConfig', 'LandSlope', 'Condition2', 'RoofMatl', 'Exterior2nd', 'Electrical'), as.factor)
 
 porcentaje<-0.7
 set.seed(123)
@@ -98,7 +99,7 @@ casas, no incluya el precio de venta para entrenar el modelo.
 ```{r}
 training1<-training1[,-81]
 modclasificacion<-rpart(clasification~.,data = training1,method = "class")
-rpart.plot(modclasificacion)
+#rpart.plot(modclasificacion)
 ```
 
 ## Pregunta 8.Utilice el modelo con el conjunto de prueba y determine la eficiencia del algoritmo para clasificar
@@ -113,7 +114,7 @@ pred2<-predict(modclasificacion, newdata = test1[,-81])
 pred2 <- apply(pred2, 1, function(x) colnames(pred2)[which.max(x)])
 pred2 <- factor(pred2)
 
-confusionMatrix(test1[, 81], pred2)
+confusionMatrix(y, pred2)
 
 length(test1$clasification)
 ```

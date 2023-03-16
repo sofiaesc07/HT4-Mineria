@@ -147,6 +147,55 @@ table(train$Survived)
 table(y)
 
 ```
+## Pregunta 10 Entrene un modelo usando validación cruzada, prediga con él. ¿le fue mejor que al modelo anterior?
+
+```{r, echo = FALSE}
+set.seed(123)
+datos2$SalePrice <- as.factor(datos2$SalePrice)
+
+ent <- trainControl(method = "repeatedcv", number = 10, repeats = 2)
+
+tune_grid = expand.grid(cp=c(0.001))
+
+vtree <- train(SalePrice ~ ., data = datos2, method = "rpart", trControl = ent, tuneGrid = tune_grid, maxdepth = 5, minbucket = 5)
+
+vtree
+```
+
+## Pregunta 11, realizar diferentes arboles.
+### Profundidad 4
+```{r, echo = FALSE}
+#Profundidad 4
+vtree1 <- train(SalePrice ~ ., data = datos2, method = "rpart", trControl = ent, tuneGrid = tune_grid, maxdepth = 4, minbucket = 4)
+
+vtree1
+```
+
+
+### Profundidad 5
+```{r, echo = FALSE}
+#Profundidad 5
+vtree2 <- train(SalePrice ~ ., data = datos2, method = "rpart", trControl = ent, tuneGrid = tune_grid, maxdepth = 5, minbucket = 5)
+
+vtree2
+```
+
+
+### Profundidad 6
+```{r, echo = FALSE}
+#Profundidad 6
+vtree3 <- train(SalePrice ~ ., data = datos2, method = "rpart", trControl = ent, tuneGrid = tune_grid, maxdepth = 6, minbucket = 6)
+
+vtree3
+```
+
+
+## Pregunta 12 Repita los análisis usando random forest como algoritmo de predicción, explique sus resultados comparando ambos algoritmos.
+```{r, echo = FALSE}
+clasificadorRF <- randomForest(SalePrice ~ ., data = datos2, ntree = 250)
+y_pred <- predict(clasificadorRF, newdata = test)
+y_pred
+```
 
 
 

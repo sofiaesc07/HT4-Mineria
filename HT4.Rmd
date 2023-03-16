@@ -70,10 +70,15 @@ rpart.plot(arbol1)
 
 ##Pregunta 3. Preddición del resultado
 ```{r}
+pred1 <- predict(arbol1, data = training1)
+p1 <- sum((training1$SalePrice - mean(training1$SalePrice)) ^ 2)
+p2 <- sum((pred1 - training1$SalePrice) ^ 2)
+p3 <- (p2 / p1)-1
+p3
 
 ```
 
-Predijo el resultado con un error del 2% lo cuál no es malo pero puede mejorar, y lo hizo con una longitud de 4 por lo que debería de intentar con mayor longitud para ver si la prección mejora y cambia. 
+Predijo el resultado con un error del 2% lo cuál no es malo pero puede mejorar, y lo hizo con una longitud de 4 por lo que debería de intentar con mayor longitud para ver si la prección mejora y cambia. Basandonos en el R^2 observamos que es bastante aceptable ya que es es bastante cercano a 1 por lo que se deduce que es un modelo de predicción bastante bueno.
 
 ##Pregunta 4. Arbol de regresión con todas las variables
 ```{r}
@@ -88,6 +93,7 @@ rpart.plot(modelo3)
 
 ##Pregunta 5. Compare resultados
 Observamos como el arbol con longitud 6 es de 4 por lo que se indica que es la longitud maxima y por lo tanto la máxima predicción y minimo error es del 2%, esta de igual forma es mejor que la de longitud 2 con 5% y la de longitud 3 que aunque sea en menor porcentaje 2% en las otras predicciones de igual forma tiene mayores porcentajes que la de longitud 6.
+
 
 ## Pregunta 6. Economica, intermedia o cara
 ```{r}
@@ -186,6 +192,7 @@ vtree3 <- train(SalePrice ~ ., data = datos2, method = "rpart", trControl = ent,
 
 vtree3
 ```
+Comparando los tres modelos podemos notar que el más preciso es el que tiene profundidad 5, validando lo antes propuesto.
 
 
 ## Pregunta 12 Repita los análisis usando random forest como algoritmo de predicción, explique sus resultados comparando ambos algoritmos.
@@ -194,7 +201,7 @@ clasificadorRF <- randomForest(SalePrice ~ ., data = datos2, ntree = 250)
 y_pred <- predict(clasificadorRF, newdata = test)
 y_pred
 ```
-
+Se puede notar que random forest encontró el mejor modelo en cuánto a la precisión,
 
 
 
